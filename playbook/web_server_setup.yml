@@ -1,0 +1,47 @@
+---
+- name: Install Nginx on Web Servers
+  hosts: target_hosts
+  become: true
+
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Install Nginx
+      apt:
+        name: nginx
+        state: present
+
+    - name: Ensure Nginx is running and enabled to start on boot
+      service:
+        name: nginx
+        state: started
+        enabled: yes
+        
+    - name: Create a simple index.html page to web server
+      copy:
+        src: "../web_service/index.html"
+        dest: "/var/www/html/index.html"
+        
+    - name: Create a simple styles.css page to web server
+      copy:
+        src: "../web_service/styles.css"
+        dest: "/var/www/html/styles.css"
+        
+    
+    - name: Install UFW (if not already installed)
+      apt:
+        name: ufw
+        state: present
+
+    - name: Open port 80 in the firewall (UFW)
+      ufw:
+        rule: allow
+        name: 'Nginx Full'
+        port: '80'
+        proto: tcp
+
+    - name: Ensure UFW is enabled (if UFW is used)
+      ufw:
+        state: enabled
