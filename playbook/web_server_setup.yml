@@ -39,8 +39,8 @@
       ufw:
         rule: allow
         name: 'Nginx Full'
-        port: '80'
-        proto: tcp
+        # port: '80' The name and port are causing conflicts, so I'm commenting out the port.
+        # proto: tcp
 
     - name: Ensure UFW is enabled (if UFW is used)
       ufw:
